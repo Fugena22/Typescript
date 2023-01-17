@@ -2,6 +2,7 @@ import {
   AppBar,
   Box,
   Button,
+  Chip,
   FormControl,
   MenuItem,
   Select,
@@ -11,7 +12,9 @@ import {
   Typography,
 } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ProgressContext } from "../../contexts/ProgressContext/ProgressContext";
+import { ThemeContext } from "../../contexts/ThemeContext/ThemeContext";
 import WelcomeMessage from "../WelcomMessage/WelcomeMessage";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -26,6 +29,11 @@ const useStyles = makeStyles((theme: Theme) =>
 const Navbar = () => {
   //styles
   const classes = useStyles();
+
+  //context
+  const { lastTime, status } = useContext(ProgressContext);
+
+  const { theme } = useContext(ThemeContext);
   //state
   const [position, setPosition] = useState<string>("Full-stack Developer");
 
@@ -40,7 +48,7 @@ const Navbar = () => {
   const onPositionChange = (event: SelectChangeEvent<string>) =>
     setPosition(event.target.value);
   return (
-    <AppBar position="static" color="primary">
+    <AppBar position="static" color={theme}>
       <Toolbar>
         <Box
           display="flex"
@@ -53,6 +61,7 @@ const Navbar = () => {
 
           <Box textAlign="center">
             <WelcomeMessage position={position} />
+            <Chip label={`Last time: ${lastTime} - Status: ${status}`}></Chip>
             <Box mt={1}>
               <FormControl>
                 <Select
@@ -77,7 +86,7 @@ const Navbar = () => {
             <Box my={1}>
               <Typography variant="h6">{time.toUTCString()}</Typography>
             </Box>
-            <Button variant="container">Login</Button>
+            <Button variant="contained">Login</Button>
           </Box>
         </Box>
       </Toolbar>
