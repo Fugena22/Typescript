@@ -1,10 +1,44 @@
-import { AppBar, Box, FormControl, Toolbar, Typography } from "@mui/material";
-import { useState } from "react";
+import {
+  AppBar,
+  Box,
+  Button,
+  FormControl,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Theme,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { createStyles, makeStyles } from "@mui/styles";
+import { useEffect, useState } from "react";
 import WelcomeMessage from "../WelcomMessage/WelcomeMessage";
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    positionSelect: {
+      color: "white !important",
+      borderBottom: "1px solid white",
+    },
+  })
+);
+
 const Navbar = () => {
+  //styles
+  const classes = useStyles();
   //state
   const [position, setPosition] = useState<string>("Full-stack Developer");
+
+  const [time, setTime] = useState<Date>(() => new Date(Date.now()));
+
+  //effect
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date(Date.now())), 1000);
+    return clearInterval(timer);
+  }, []);
+
+  const onPositionChange = (event: SelectChangeEvent<string>) =>
+    setPosition(event.target.value);
   return (
     <AppBar position="static" color="primary">
       <Toolbar>
@@ -20,8 +54,30 @@ const Navbar = () => {
           <Box textAlign="center">
             <WelcomeMessage position={position} />
             <Box mt={1}>
-              <FormControl></FormControl>
+              <FormControl>
+                <Select
+                  value={position}
+                  onChange={onPositionChange}
+                  className={classes.positionSelect}
+                >
+                  <MenuItem value="Full-stack Developer">
+                    Full-stack Developer
+                  </MenuItem>
+                  <MenuItem value="Front-end Developer">
+                    Front-end Developer
+                  </MenuItem>
+                  <MenuItem value="Back-end Developer">
+                    Back-end Developer
+                  </MenuItem>
+                </Select>
+              </FormControl>
             </Box>
+          </Box>
+          <Box textAlign="center">
+            <Box my={1}>
+              <Typography variant="h6">{time.toUTCString()}</Typography>
+            </Box>
+            <Button variant="container">Login</Button>
           </Box>
         </Box>
       </Toolbar>
